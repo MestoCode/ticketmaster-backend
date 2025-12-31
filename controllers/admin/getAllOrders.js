@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
     });
 
     return res.status(200).json({
-      message: 'Orders retrieved successfully',
+      message: 'All orders retrieved successfully',
       orders,
       count: orders.length,
     });

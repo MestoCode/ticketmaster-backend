@@ -114,6 +114,57 @@
 						"description": "Login as an admin"
 					},
 					"response": []
+				},
+				{
+					"name": "Get All Orders (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include(\"successfully\");",
+									"});",
+									"",
+									"pm.test(\"Response has orders array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.orders).to.be.an(\"array\");",
+									"    pm.expect(jsonData).to.have.property(\"count\");",
+									"});",
+									"",
+									"pm.test(\"Orders include user information\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.orders.length > 0) {",
+									"        pm.expect(jsonData.orders[0]).to.have.property(\"user\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/admin/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"orders"
+							]
+						},
+						"description": "Get all orders from all users (Admin only)"
+					},
+					"response": []
 				}
 			],
 			"description": "Admin authentication endpoints"
@@ -253,7 +304,12 @@
 									"    var jsonData = pm.response.json();",
 									"    pm.expect(jsonData.order).to.have.property(\"id\");",
 									"    pm.expect(jsonData.order).to.have.property(\"title\");",
-									"    pm.expect(jsonData.order).to.have.property(\"price\");",
+									"    pm.expect(jsonData.order).to.have.property(\"eventDate\");",
+									"    pm.expect(jsonData.order).to.have.property(\"venue\");",
+									"    pm.expect(jsonData.order).to.have.property(\"location\");",
+									"    pm.expect(jsonData.order).to.have.property(\"totalPrice\");",
+									"    pm.expect(jsonData.order).to.have.property(\"eventID\");",
+									"    pm.expect(jsonData.order).to.have.property(\"userId\");",
 									"    pm.expect(jsonData.order).to.have.property(\"createdAt\");",
 									"});"
 								],
@@ -272,7 +328,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Concert Ticket\",\n    \"price\": 99.99\n}",
+							"raw": "{\n    \"title\": \"Phoenix Suns vs. Sacramento Kings\",\n    \"eventDate\": \"2026-01-02\",\n    \"venue\": \"Mortgage Matchup Center (formerly PHX Arena)\",\n    \"location\": \"Phoenix\",\n    \"totalPrice\": 34,\n    \"eventID\": \"1A_ZkG6Gkdnd6KV\",\n    \"userId\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -333,6 +389,51 @@
 							]
 						},
 						"description": "Get all orders"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include(\"successfully\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Order ID"
+								}
+							]
+						},
+						"description": "Delete an order by ID"
 					},
 					"response": []
 				}

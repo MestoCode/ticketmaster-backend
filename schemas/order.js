@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const Sequelize = require('sequelize');
 const { sequelize } = require('../database/sequelizeConnection');
+const User = require('./user');
 
 const Order = sequelize.define(
   'Order', 
@@ -14,9 +15,33 @@ const Order = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    price: {
+    eventDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    venue: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    location: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    totalPrice: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+    },
+    eventID: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: 'id',
+      },
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -29,6 +54,10 @@ const Order = sequelize.define(
     tableName: 'orders',
   }
 );
+
+// Define the relationship: User has many Orders
+User.hasMany(Order, { foreignKey: 'userId', as: 'orders' });
+Order.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 module.exports = Order;
 
